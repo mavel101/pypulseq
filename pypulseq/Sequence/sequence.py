@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import matplotlib as mpl
 import numpy as np
 
-mpl.use('TkAgg')
+#mpl.use('TkAgg')
 from matplotlib import pyplot as plt
 
 from pypulseq.Sequence.test_report import test_report as ext_test_report
