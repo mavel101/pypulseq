@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from pypulseq.make_trap_pulse import make_trapezoid
+from pypulseq.make_delay import make_delay
 from pypulseq.opts import Opts
 
 
@@ -108,13 +109,15 @@ def make_sinc_pulse(flip_angle: float, system: Opts = Opts(), duration: float = 
         gz = None
         gzr = None
 
-    if rf.ringdown_time > 0:
-        t_fill = np.arange(1, round(rf.ringdown_time / 1e-6) + 1) * 1e-6
-        rf.t = np.concatenate((rf.t, rf.t[-1] + t_fill))
-        rf.signal = np.concatenate((rf.signal, np.zeros(len(t_fill))))
-
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rf.signal == -0.0)
     rf.signal[negative_zero_indices] = 0
 
-    return rf, gz, gzr
+    # create a delay object to avoid zero filling after RF pulse
+    delay = gz.rise_time + gz.flat_time + gz.fall_time
+    if rf.ringdown_time > gz.fall_time:
+        delay += gz.fall_time - rf.ringdown_time
+
+    rf_del = make_delay(d=delay)
+
+    return rf, gz, gzr, rf_del
