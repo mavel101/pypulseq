@@ -114,10 +114,14 @@ def make_sinc_pulse(flip_angle: float, system: Opts = Opts(), duration: float = 
     rf.signal[negative_zero_indices] = 0
 
     # create a delay object to avoid zero filling after RF pulse
-    delay = gz.rise_time + gz.flat_time + gz.fall_time
-    if rf.ringdown_time > gz.fall_time:
-        delay += gz.fall_time - rf.ringdown_time
+    if gz is not None:
+        delay = gz.rise_time + gz.flat_time + gz.fall_time
+        if rf.ringdown_time > gz.fall_time:
+            delay += rf.ringdown_time - gz.fall_time
 
-    rf_del = make_delay(d=delay)
+        rf_del = make_delay(d=delay)
+    else:
+        delay = rf.delay + rf.t[-1] + rf.ringdown_time
+        rf_del = make_delay(d=delay)
 
     return rf, gz, gzr, rf_del

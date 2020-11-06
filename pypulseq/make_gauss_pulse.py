@@ -113,15 +113,21 @@ def make_gauss_pulse(flip_angle: float, system: Opts = Opts(), duration: float =
         gz = None
         gzr = None
 
-    if rf.ringdown_time > 0:
-        t_fill = np.arange(1, round(rf.ringdown_time / 1e-6) + 1) * 1e-6
-        rf.t = np.concatenate((rf.t, rf.t[-1] + t_fill))
-        rf.signal = np.concatenate((rf.signal, np.zeros(len(t_fill))))
-
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rf.signal == -0.0)
     rf.signal[negative_zero_indices] = 0
 
+    # create a delay object to avoid zero filling after RF pulse
+    if gz is not None:
+        delay = gz.rise_time + gz.flat_time + gz.fall_time
+        if rf.ringdown_time > gz.fall_time:
+            delay += rf.ringdown_time - gz.fall_time
+
+        rf_del = make_delay(d=delay)
+    else:
+        delay = rf.delay + rf.t[-1] + rf.ringdown_time
+        rf_del = make_delay(d=delay)
+        
     return rf, gz, gzr
 
 
