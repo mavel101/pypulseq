@@ -23,7 +23,7 @@ from pypulseq.points_to_waveform import points_to_waveform
 class Sequence:
     def __init__(self, system=Opts()):
         self.version_major = 1
-        self.version_minor = 2
+        self.version_minor = 3
         self.version_revision = 0
         self.system = system
         self.definitions = dict()
