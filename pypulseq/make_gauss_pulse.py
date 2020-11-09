@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from pypulseq.make_trap_pulse import make_trapezoid
+from pypulseq.make_delay import make_delay
 from pypulseq.opts import Opts
 
 
@@ -128,7 +129,7 @@ def make_gauss_pulse(flip_angle: float, system: Opts = Opts(), duration: float =
         delay = rf.delay + rf.t[-1] + rf.ringdown_time
         rf_del = make_delay(d=delay)
         
-    return rf, gz, gzr
+    return rf, gz, gzr, rf_del
 
 
 def __gauss(x):
