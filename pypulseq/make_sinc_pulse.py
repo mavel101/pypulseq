@@ -11,7 +11,7 @@ from pypulseq.opts import Opts
 def make_sinc_pulse(flip_angle: float, system: Opts = Opts(), duration: float = 0, freq_offset: float = 0,
                     phase_offset: float = 0, time_bw_product: float = 4, apodization: float = 0,
                     center_pos: float = 0.5, max_grad: float = 0, max_slew: float = 0, slice_thickness: float = 0,
-                    delay: float = 0, use: str = None):
+                    delay: float = 0, use: str = None, make_delay: bool = False):
     """
     Creates a radio-frequency sinc pulse event and optionally accompanying slice select and slice select rephasing
     trapezoidal gradient events.
@@ -113,15 +113,18 @@ def make_sinc_pulse(flip_angle: float, system: Opts = Opts(), duration: float = 
     negative_zero_indices = np.where(rf.signal == -0.0)
     rf.signal[negative_zero_indices] = 0
 
-    # create a delay object to avoid zero filling after RF pulse
-    if gz is not None:
-        delay = gz.rise_time + gz.flat_time + gz.fall_time
-        if rf.ringdown_time > gz.fall_time:
-            delay += rf.ringdown_time - gz.fall_time
+    if make_delay:
+        # create a delay object to avoid zero filling after RF pulse
+        if gz is not None:
+            delay = gz.rise_time + gz.flat_time + gz.fall_time
+            if rf.ringdown_time > gz.fall_time:
+                delay += rf.ringdown_time - gz.fall_time
 
-        rf_del = make_delay(d=delay)
+            rf_del = make_delay(d=delay)
+        else:
+            delay = rf.delay + rf.t[-1] + rf.ringdown_time
+            rf_del = make_delay(d=delay)
+
+        return rf, gz, gzr, rf_del
     else:
-        delay = rf.delay + rf.t[-1] + rf.ringdown_time
-        rf_del = make_delay(d=delay)
-
-    return rf, gz, gzr, rf_del
+        return rf, gz, gzr
