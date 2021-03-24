@@ -182,7 +182,7 @@ def get_block(self, block_index: int) -> SimpleNamespace:
         delay.type = 'delay'
         delay.delay = self.delay_library.data[event_ind[0]][0]
         block.delay = delay
-    elif event_ind[1] > 0:
+    if event_ind[1] > 0:
         block.rf = self.rf_from_lib_data(self.rf_library.data[event_ind[1]])
     grad_channels = ['gx', 'gy', 'gz']
     for i in range(1, len(grad_channels) + 1):
