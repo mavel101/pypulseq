@@ -116,10 +116,10 @@ def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, 
     else:
         gz = None
         
-    if rf.ringdown_time > 0:
-        t_fill = np.arange(1, round(rf.ringdown_time / 1e-6) + 1) * 1e-6
-        rf.t = np.concatenate((rf.t, (rf.t[-1] + t_fill)))
-        rf.signal = np.concatenate((rf.signal, np.zeros(len(t_fill))))
+    # if rf.ringdown_time > 0:
+    #     t_fill = np.arange(1, round(rf.ringdown_time / 1e-6) + 1) * 1e-6
+    #     rf.t = np.concatenate((rf.t, (rf.t[-1] + t_fill)))
+    #     rf.signal = np.concatenate((rf.signal, np.zeros(len(t_fill))))
 
     if return_delay:
         # create a delay object to avoid zero filling after RF pulse
