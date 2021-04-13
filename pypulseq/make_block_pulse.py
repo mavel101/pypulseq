@@ -10,7 +10,7 @@ from pypulseq.opts import Opts
 
 def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, duration: float = 0,
                      freq_offset: float = 0, max_grad: float = 0, max_slew: float = 0, phase_offset: float = 0,
-                     return_gz: bool = False, system: Opts = Opts(), slice_thickness: float = 0,
+                     return_gz: bool = False, return_delay: bool = False, system: Opts = Opts(), slice_thickness: float = 0,
                      time_bw_product: float = 0,
                      use: str = str()) -> Union[SimpleNamespace, Tuple[SimpleNamespace, SimpleNamespace]]:
     """
@@ -118,4 +118,23 @@ def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, 
         rf.t = np.concatenate((rf.t, (rf.t[-1] + t_fill)))
         rf.signal = np.concatenate((rf.signal, np.zeros(len(t_fill))))
 
-    return rf, gz if return_gz else rf
+    if return_delay:
+        # create a delay object to avoid zero filling after RF pulse
+        if gz is not None:
+            delay = gz.rise_time + gz.flat_time + gz.fall_time
+            if rf.ringdown_time > gz.fall_time:
+                delay += rf.ringdown_time - gz.fall_time
+
+            rf_delay = make_delay(d=delay)
+        else:
+            delay = rf.delay + rf.t[-1] + rf.ringdown_time
+            rf_delay = make_delay(d=delay)
+    
+    if return_delay and return_gz:
+        return rf, gz, gzr, rf_delay
+    elif return_gz:
+        return rf, gz, gzr
+    elif return_delay:
+        return rf, rf_delay
+    else return_gz:
+        return rf
