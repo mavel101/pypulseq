@@ -121,6 +121,8 @@ def make_gauss_pulse(flip_angle: float, apodization: float = 0, bandwidth: float
 
         if rf.delay < (gz.rise_time + gz.delay):
             rf.delay = gz.rise_time + gz.delay
+    else:
+        gz = None
 
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rf.signal == -0.0)
