@@ -116,6 +116,8 @@ def make_arbitrary_rf(signal: np.ndarray, flip_angle: float, bandwidth: float = 
 
         if rf.delay < (gz.rise_time + gz.delay):
             rf.delay = gz.rise_time + gz.delay
+    else:
+        gz = None
 
     if rf.ringdown_time > 0:
         t_fill = np.arange(1, round(rf.ringdown_time / 1e-6) + 1) * 1e-6
