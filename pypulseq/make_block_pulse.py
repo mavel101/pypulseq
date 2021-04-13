@@ -5,6 +5,7 @@ from typing import Tuple, Union
 import numpy as np
 
 from pypulseq.make_trap_pulse import make_trapezoid
+from pypulseq.make_delay import make_delay
 from pypulseq.opts import Opts
 
 
@@ -131,10 +132,10 @@ def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, 
             rf_delay = make_delay(d=delay)
     
     if return_delay and return_gz:
-        return rf, gz, gzr, rf_delay
+        return rf, gz, rf_delay
     elif return_gz:
-        return rf, gz, gzr
+        return rf, gz
     elif return_delay:
         return rf, rf_delay
-    else return_gz:
+    else:
         return rf

@@ -128,16 +128,16 @@ def make_sinc_pulse(flip_angle: float, apodization: float = 0, delay: float = 0,
             if rf.ringdown_time > gz.fall_time:
                 delay += rf.ringdown_time - gz.fall_time
 
-            rf_del = make_delay(d=delay)
+            rf_delay = make_delay(d=delay)
         else:
             delay = rf.delay + rf.t[-1] + rf.ringdown_time
-            rf_del = make_delay(d=delay)
+            rf_delay = make_delay(d=delay)
 
-   if return_delay and return_gz:
+    if return_delay and return_gz:
         return rf, gz, gzr, rf_delay
     elif return_gz:
         return rf, gz, gzr
     elif return_delay:
         return rf, rf_delay
-    else return_gz:
+    else:
         return rf
