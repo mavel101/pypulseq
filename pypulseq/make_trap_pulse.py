@@ -5,7 +5,7 @@ from pypulseq.opts import Opts
 
 
 def make_trapezoid(channel: str, amplitude: float = 0, area: float = None, delay: float = 0, duration: float = 0,
-                   flat_area: float = 0, flat_time: float = 0, max_grad: float = 0, max_slew: float = 0,
+                   flat_area: float = 0, flat_time: float = -1, max_grad: float = 0, max_slew: float = 0,
                    rise_time: float = 0, system: Opts = Opts()) -> SimpleNamespace:
     """
     Creates a trapezoidal gradient event.
@@ -62,7 +62,7 @@ def make_trapezoid(channel: str, amplitude: float = 0, area: float = None, delay
     if area is None and flat_area == 0 and amplitude == 0:
         raise ValueError("Must supply either 'area', 'flat_area' or 'amplitude'.")
 
-    if flat_time != 0:
+    if flat_time != -1:
         if amplitude != 0:
             amplitude2 = amplitude
         else:
