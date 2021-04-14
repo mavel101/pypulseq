@@ -123,7 +123,6 @@ def make_sinc_pulse(flip_angle: float, apodization: float = 0, delay: float = 0,
     negative_zero_indices = np.where(rf.signal == -0.0)
     rf.signal[negative_zero_indices] = 0
 
-<<<<<<< HEAD
     if return_delay:
         # create a delay object to avoid zero filling after RF pulse
         if gz is not None:
@@ -142,9 +141,5 @@ def make_sinc_pulse(flip_angle: float, apodization: float = 0, delay: float = 0,
         return rf, gz, gzr
     elif return_delay:
         return rf, rf_delay
-=======
-    if return_gz:
-        return rf, gz, gzr
->>>>>>> upstream/dev
     else:
         return rf
