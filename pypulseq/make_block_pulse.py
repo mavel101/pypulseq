@@ -62,7 +62,7 @@ def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, 
         If `return_gz=True`, and `slice_thickness` is not passed.
     """
     valid_use_pulses = ['excitation', 'refocusing', 'inversion']
-    if use is not None and use not in valid_use_pulses:
+    if use != '' and use not in valid_use_pulses:
         raise ValueError(
             f"Invalid use parameter. Must be one of 'excitation', 'refocusing' or 'inversion'. Passed: {use}")
 
