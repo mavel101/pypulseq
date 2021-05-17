@@ -124,7 +124,7 @@ def make_block_pulse(flip_angle: float, bandwidth: float = 0, delay: float = 0, 
     if return_delay:
         # create a delay object to avoid zero filling after RF pulse
         if gz is not None:
-            delay = gz.rise_time + gz.flat_time + gz.fall_time
+            delay = gz.delay + gz.rise_time + gz.flat_time + gz.fall_time
             if rf.ringdown_time > gz.fall_time:
                 delay += rf.ringdown_time - gz.fall_time
 
