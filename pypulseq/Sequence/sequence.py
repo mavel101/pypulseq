@@ -58,6 +58,8 @@ class Sequence:
         self.arr_block_durations = []  # Cache of block durations
         self.arr_extension_numeric_idx = []  # numeric IDs of the used extensions
         self.arr_extension_string_idx = []  # string IDs of the used extensions
+        
+        self.seq_hash = ''
 
     def __str__(self):
         s = "Sequence:"
@@ -357,6 +359,19 @@ class Sequence:
 
         extension_str = self.arr_extension_string_idx[num]
         return extension_str
+
+    def get_hash(self) -> str:
+        """
+        Get sequence hash`.
+
+        Returns
+        -------
+        hash : str
+            String hash of sequence.
+
+        """
+
+        return self.seq_hash
 
     def gradient_waveforms(self) -> np.ndarray:
         """

@@ -30,6 +30,8 @@ def add_md5_sig(file_name):
         a_file.write(explanation)
         a_file.write(digest)
 
+    return digest
+
 
 def write(self, file_name: str) -> None:
     """
@@ -231,4 +233,5 @@ def write(self, file_name: str) -> None:
                 output_file.write(s)
                 output_file.write('\n')
 
-    add_md5_sig(file_name)
+    seq_hash = add_md5_sig(file_name)
+    self.seq_hash = seq_hash
