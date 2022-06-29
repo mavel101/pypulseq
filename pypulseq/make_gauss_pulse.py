@@ -134,11 +134,10 @@ def make_gauss_pulse(flip_angle: float, apodization: float = 0, bandwidth: float
             delay = gz.delay + gz.rise_time + gz.flat_time + gz.fall_time
             if rf.ringdown_time > gz.fall_time:
                 delay += rf.ringdown_time - gz.fall_time
-
-            rf_delay = make_delay(d=delay)
         else:
             delay = rf.delay + rf.t[-1] + rf.ringdown_time
-            rf_delay = make_delay(d=delay)
+        
+        rf_delay = make_delay(d=math.ceil(delay / system.grad_raster_time) * system.grad_raster_time)
     
     if return_delay and return_gz:
         return rf, gz, gzr, rf_delay

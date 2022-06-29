@@ -159,11 +159,10 @@ def sigpy_n_seq(
             delay = gz.delay + gz.rise_time + gz.flat_time + gz.fall_time
             if rfp.ringdown_time > gz.fall_time:
                 delay += rf.ringdown_time - gz.fall_time
-
-            rf_delay = make_delay(d=delay)
         else:
             delay = rfp.delay + rfp.t[-1] + rfp.ringdown_time
-            rf_delay = make_delay(d=delay)
+        
+        rf_delay = make_delay(d=math.ceil(delay / system.grad_raster_time) * system.grad_raster_time)
 
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rfp.signal == -0.0)
