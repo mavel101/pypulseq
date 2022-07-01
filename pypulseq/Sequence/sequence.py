@@ -43,6 +43,7 @@ class Sequence:
         self.rf_library = EventLibrary()  # Library of RF events
         self.shape_library = EventLibrary()  # Library of compressed shapes
         self.trigger_library = EventLibrary()  # Library of trigger events
+        self.ptx_library = EventLibrary() # Library of (dummy) pTx RF events
 
         # =========
         # OTHER

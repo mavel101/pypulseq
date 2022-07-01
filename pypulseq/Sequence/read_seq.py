@@ -37,6 +37,7 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
     self.label_inc_library = EventLibrary()
     self.label_set_library = EventLibrary()
     self.trigger_library = EventLibrary()
+    self.ptx_library = EventLibrary()
 
     self.dict_block_events = {}
     self.dict_definitions = {}
@@ -112,6 +113,12 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
             l1 = lambda s: int(s)
             l2 = lambda s: get_supported_labels().index(s) + 1
             self.label_inc_library = __read_and_parse_events(input_file, l1, l2)
+        elif section[:13] == 'extension PTX':
+            extension_id = int(section[13:])
+            self.set_extension_string_ID('PTX', extension_id)
+            self.ptx_library = __read_events(input_file, (1, 1e-6, 1e-6), event_library=self.ptx_library)
+        elif section == '[SIGNATURE]':
+            self.seq_hash = __read_hash(input_file)
         else:
             raise ValueError(f'Unknown section code: {section}')
 
@@ -355,6 +362,13 @@ def __read_shapes(input_file) -> EventLibrary:
         shape_library.insert(key_id=id, new_data=data)
     return shape_library
 
+def __read_hash(input_file):
+
+    line = __strip_line(input_file)
+    while not line.startswith('Hash'):
+        line = __strip_line(input_file)
+
+    return line[5:]
 
 def __skip_comments(input_file) -> str:
     """

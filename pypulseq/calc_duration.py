@@ -37,5 +37,7 @@ def calc_duration(*args: SimpleNamespace) -> float:
             duration = max(duration, event.delay + event.rise_time + event.flat_time + event.fall_time)
         elif event.type == 'output' or event.type == 'trigger':
             duration = max(duration, event.delay + event.duration)
+        elif event.type == 'ptx':
+            duration = max(duration, event.delay + event.duration)
 
     return duration
