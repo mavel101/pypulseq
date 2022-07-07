@@ -3,14 +3,15 @@ from types import SimpleNamespace
 from pypulseq.opts import Opts
 
 
-def make_ptx_pulse(rf_type: str = 'exc', delay: float = 0, duration: float = 0) -> SimpleNamespace:
+def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0) -> SimpleNamespace:
     """
     Creates a pTx dummy pulse for the pTx extension.
     WIP: Maybe add parameters: pulse ID?, selective/non-selective?
 
     Parameters
     ----------
-    type: str, default='exc'
+    flip_angle: Flip angle [deg]
+    rf_type: str, default='exc'
         Pulse type. Currently only excitation ('exc') or refocusing ('ref')
     delay : float, optional, default=0
         Delay, [s].
@@ -37,6 +38,7 @@ def make_ptx_pulse(rf_type: str = 'exc', delay: float = 0, duration: float = 0) 
     pulse = SimpleNamespace()
     pulse.type = 'ptx'
     pulse.rf_type = rf_types[rf_type]
+    pulse.flip_angle = flip_angle
     pulse.delay = delay
     pulse.duration = duration
 

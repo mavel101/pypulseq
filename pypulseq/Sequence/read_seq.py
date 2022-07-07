@@ -116,7 +116,7 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
         elif section[:13] == 'extension PTX':
             extension_id = int(section[13:])
             self.set_extension_string_ID('PTX', extension_id)
-            self.ptx_library = __read_events(input_file, (1, 1e-6, 1e-6), event_library=self.ptx_library)
+            self.ptx_library = __read_events(input_file, (1, 1, 1e-6, 1e-6), event_library=self.ptx_library)
         elif section == '[SIGNATURE]':
             self.seq_hash = __read_hash(input_file)
         else:
