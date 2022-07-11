@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from pypulseq.opts import Opts
 
 
-def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0) -> SimpleNamespace:
+def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0, freq_offset: float = 0, phase_offset: float = 0) -> SimpleNamespace:
     """
     Creates a pTx dummy pulse for the pTx extension.
     WIP: Maybe add parameters: pulse ID?, selective/non-selective?
@@ -41,5 +41,7 @@ def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, du
     pulse.flip_angle = flip_angle
     pulse.delay = delay
     pulse.duration = duration
+    pulse.freq_offset = freq_offset
+    pulse.phase_offset = phase_offset
 
     return pulse

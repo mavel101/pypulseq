@@ -171,7 +171,7 @@ def add_block(self, block_index: int, *args: SimpleNamespace) -> None:
             ext = {'type': self.get_extension_type_ID('LABELINC'), 'ref': label_id2}
             extensions.append(ext)
         elif event.type == 'ptx':
-            data = [event.rf_type, event.flip_angle, event.delay, event.duration]
+            data = [event.rf_type, event.flip_angle, event.delay, event.duration, event.freq_offset, event.phase_offset]
             ptx_id, found = self.ptx_library.find(data)
             if not found:
                 self.ptx_library.insert(ptx_id, data)
@@ -383,6 +383,8 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                 pulse.flip_angle = data[1]
                 pulse.delay = data[2]
                 pulse.duration = data[3]
+                pulse.freq_offset = data[4]
+                pulse.phase_offset = data[5]
                 block.ptx = pulse
             else:
                 raise RuntimeError(f'Unknown extension ID {ext_data[0]}')

@@ -221,9 +221,9 @@ def write(self, file_name: str) -> None:
             output_file.write('# id type delay (us) duration (us)\n')
             output_file.write(f'extension PTX {self.get_extension_type_ID("PTX")}\n')
             keys = self.ptx_library.keys
-            id_format_str = '{:.0f} {:.0f} {:.0f} {:.0f} {:.0f}\n'  # See comment at the beginning of this method definition
+            id_format_str = '{:.0f} {:.0f} {:.0f} {:.0f} {:.0f} {:.0f} {:.0f}\n'  # See comment at the beginning of this method definition
             for k in keys.values():
-                s = id_format_str.format(k, *np.round(self.ptx_library.data[k] * [1, 1, 1e6, 1e6]))
+                s = id_format_str.format(k, *np.round(self.ptx_library.data[k] * [1, 1, 1e6, 1e6, 1, 1]))
                 output_file.write(s)
             output_file.write('\n')
 
