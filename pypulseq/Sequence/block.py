@@ -271,6 +271,8 @@ def get_block(self, block_index: int) -> SimpleNamespace:
     block = SimpleNamespace()
     event_ind = self.dict_block_events[block_index]
 
+    block.no_rot = self.no_rot[block_index - 1]
+
     if event_ind[0] > 0:  # Delay
         delay = SimpleNamespace()
         delay.type = 'delay'

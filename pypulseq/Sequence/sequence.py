@@ -60,6 +60,8 @@ class Sequence:
         self.arr_extension_numeric_idx = []  # numeric IDs of the used extensions
         self.arr_extension_string_idx = []  # string IDs of the used extensions
         
+        self.no_rot = [] # dont use rotations for this block
+
         self.seq_hash = ''
 
     def __str__(self):
@@ -75,7 +77,7 @@ class Sequence:
         s += "\ndict_block_events: " + str(len(self.dict_block_events))
         return s
 
-    def add_block(self, *args: SimpleNamespace) -> None:
+    def add_block(self, *args: SimpleNamespace, no_rot: bool = False) -> None:
         """
         Adds event(s) as a block to `Sequence`.
 
@@ -85,6 +87,7 @@ class Sequence:
             Event or list of events to be added as a block to `Sequence`.
         """
         block.add_block(self, len(self.dict_block_events) + 1, *args)
+        self.no_rot.append(no_rot)
 
     def calculate_kspace(self, trajectory_delay: int = 0) -> Tuple[np.array, np.array, np.array, np.array, np.array]:
         """
