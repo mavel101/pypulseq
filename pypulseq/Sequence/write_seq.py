@@ -218,11 +218,11 @@ def write(self, file_name: str) -> None:
 
         if len(self.ptx_library.keys) != 0:
             output_file.write('# Extension specification for pTx pulses:\n')
-            output_file.write('# id type flip delay duration  freq phase\n')
-            output_file.write('# ..       deg   us     us      Hz   rad\n')
+            output_file.write('# id type flip delay duration  freq phase slice_ix\n')
+            output_file.write('# ..       deg   us     us      Hz   rad          \n')
             output_file.write(f'extension PTX {self.get_extension_type_ID("PTX")}\n')
             keys = self.ptx_library.keys
-            id_format_str = '{:.0f} {:.0f} {:.0f} {:.0f} {:.0f} {:g} {:g}\n'  # See comment at the beginning of this method definition
+            id_format_str = '{:.0f} {:.0f} {:.0f} {:.0f} {:.0f} {:g} {:g} {:.0f}\n'  # See comment at the beginning of this method definition
             for k in keys.values():
                 lib_data1 = np.round(self.ptx_library.data[k][:4] * [1, 1, 1e6, 1e6])
                 lib_data2 = self.ptx_library.data[k][4:]
