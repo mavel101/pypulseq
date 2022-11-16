@@ -82,7 +82,7 @@ def write(self, file_name: str) -> None:
             output_file.write('\n')
 
         output_file.write('# Format of blocks:\n')
-        output_file.write('#  #  D RF  GX  GY  GZ ADC EXT ROT\n')
+        output_file.write('#  #  D RF  GX  GY  GZ ADC EXT NOROT\n')
         output_file.write('[BLOCKS]\n')
         id_format_width = '{:' + str(len(str(len(self.dict_block_events)))) + 'd}'
         id_format_str = id_format_width + ' ' + '{:2d} {:2d} {:3d} {:3d} {:3d} {:2d} {:2d} {:2d}\n'
