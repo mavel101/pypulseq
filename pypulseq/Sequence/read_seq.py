@@ -42,8 +42,6 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
     self.dict_block_events = {}
     self.dict_definitions = {}
 
-    self.no_rot = []
-
     jemris_generated = False
 
     while True:
@@ -78,7 +76,7 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
                 self.version_revision = version_revision
 
         elif section == '[BLOCKS]':
-            self.dict_block_events, self.no_rot = __read_blocks(input_file, compatibility_mode_12x_13x)
+            self.dict_block_events = __read_blocks(input_file, compatibility_mode_12x_13x)
         elif section == '[RF]':
             if jemris_generated:
                 self.rf_library = __read_events(input_file, (1, 1, 1, 1, 1), event_library=self.rf_library)
@@ -118,7 +116,7 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
         elif section[:13] == 'extension PTX':
             extension_id = int(section[13:])
             self.set_extension_string_ID('PTX', extension_id)
-            self.ptx_library = __read_events(input_file, (1, 1, 1e-6, 1e-6, 1, 1, 1), event_library=self.ptx_library)
+            self.ptx_library = __read_events(input_file, (1, 1, 1e-6, 1e-6, 1, 1, 1, 1), event_library=self.ptx_library)
         elif section == '[SIGNATURE]':
             self.seq_hash = __read_hash(input_file)
         else:
@@ -260,7 +258,6 @@ def __read_blocks(input_file, compatibility_mode_12x_13x: bool) -> dict:
     line = __strip_line(input_file)
 
     event_table = dict()
-    no_rot = []
     while line != '' and line != '#':
         block_events = np.fromstring(line, dtype=int, sep=' ')
 
@@ -269,11 +266,9 @@ def __read_blocks(input_file, compatibility_mode_12x_13x: bool) -> dict:
         else:
             event_table[block_events[0]] = block_events[1:-1]
 
-        no_rot.append(bool(block_events[-1]))
-
         line = __strip_line(input_file)
 
-    return event_table, no_rot
+    return event_table
 
 
 def __read_events(input_file, scale: list = (1,), event_type: str = str(),

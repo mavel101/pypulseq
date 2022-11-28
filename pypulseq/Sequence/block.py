@@ -171,7 +171,7 @@ def add_block(self, block_index: int, *args: SimpleNamespace) -> None:
             ext = {'type': self.get_extension_type_ID('LABELINC'), 'ref': label_id2}
             extensions.append(ext)
         elif event.type == 'ptx':
-            data = [event.rf_type, event.flip_angle, event.delay, event.duration, event.freq_offset, event.phase_offset, event.slice_ix]
+            data = [event.rf_type, event.flip_angle, event.delay, event.duration, event.freq_offset, event.phase_offset, event.slice_ix, event.no_rot]
             ptx_id, found = self.ptx_library.find(data)
             if not found:
                 self.ptx_library.insert(ptx_id, data)
@@ -270,8 +270,6 @@ def get_block(self, block_index: int) -> SimpleNamespace:
 
     block = SimpleNamespace()
     event_ind = self.dict_block_events[block_index]
-
-    block.no_rot = self.no_rot[block_index - 1]
 
     if event_ind[0] > 0:  # Delay
         delay = SimpleNamespace()
