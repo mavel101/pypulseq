@@ -42,6 +42,7 @@ from pypulseq.make_gauss_pulse import make_gauss_pulse
 from pypulseq.make_label import make_label
 from pypulseq.make_sinc_pulse import make_sinc_pulse
 from pypulseq.make_trap_pulse import make_trapezoid
+from pypulseq.make_arbitrary_grad import make_arbitrary_grad
 from pypulseq.make_trigger import make_trigger
 from pypulseq.opts import Opts
 from pypulseq.points_to_waveform import points_to_waveform
