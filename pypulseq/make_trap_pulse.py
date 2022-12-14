@@ -6,7 +6,7 @@ import numpy as np
 from pypulseq.opts import Opts
 
 
-def make_trapezoid(channel: str, amplitude: float = 0, area: float = None, delay: float = 0, duration: float = 0,
+def make_trapezoid(channel: str, amplitude: float = None, area: float = None, delay: float = 0, duration: float = 0,
                    flat_area: float = 0, flat_time: float = -1, max_grad: float = 0, max_slew: float = 0,
                    rise_time: float = 0, system: Opts = Opts()) -> SimpleNamespace:
     """
@@ -77,7 +77,7 @@ def make_trapezoid(channel: str, amplitude: float = 0, area: float = None, delay
         fall_time, flat_time = rise_time, flat_time
     elif duration > 0:
         amplitude2 = amplitude
-        if amplitude == 0:
+        if amplitude is None:
             if rise_time == 0:
                 dC = 1 / abs(2 * max_slew) + 1 / abs(2 * max_slew)
                 possible = duration ** 2 > 4 * abs(area) * dC
@@ -98,7 +98,7 @@ def make_trapezoid(channel: str, amplitude: float = 0, area: float = None, delay
         fall_time = rise_time
         flat_time = duration - rise_time - fall_time
 
-        if amplitude == 0:
+        if amplitude is None:
             amplitude2 = area / (rise_time / 2 + fall_time / 2 + flat_time)
     else:
         if area == 0:
