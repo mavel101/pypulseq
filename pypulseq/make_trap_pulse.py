@@ -8,7 +8,7 @@ from pypulseq.opts import Opts
 
 def make_trapezoid(channel: str, amplitude: float = None, area: float = None, delay: float = 0, duration: float = 0,
                    flat_area: float = 0, flat_time: float = -1, max_grad: float = 0, max_slew: float = 0,
-                   rise_time: float = 0, system: Opts = Opts()) -> SimpleNamespace:
+                   rise_time: float = 0, fall_time: float = 0, system: Opts = Opts()) -> SimpleNamespace:
     """
     Creates a trapezoidal gradient event.
 
@@ -62,8 +62,11 @@ def make_trapezoid(channel: str, amplitude: float = None, area: float = None, de
     if rise_time <= 0:
         rise_time = system.rise_time
 
-    if area is None and flat_area == 0 and amplitude == 0:
+    if area is None and flat_area == 0 and amplitude is None:
         raise ValueError("Must supply either 'area', 'flat_area' or 'amplitude'.")
+
+    if fall_time != 0 and flat_time == -1:
+        raise ValueError("Must supply flat time, if fall time is supplied.")
 
     if flat_time != -1:
         if amplitude != 0:
@@ -74,7 +77,8 @@ def make_trapezoid(channel: str, amplitude: float = None, area: float = None, de
         if rise_time == 0:
             rise_time = abs(amplitude2) / max_slew
             rise_time = math.ceil(rise_time / system.grad_raster_time) * system.grad_raster_time
-        fall_time, flat_time = rise_time, flat_time
+        if fall_time == 0:
+            fall_time = rise_time
     elif duration > 0:
         amplitude2 = amplitude
         if amplitude is None:
