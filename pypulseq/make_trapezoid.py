@@ -8,7 +8,7 @@ from pypulseq.opts import Opts
 
 def make_trapezoid(
     channel: str,
-    amplitude: float = 0,
+    amplitude: float = None,
     area: float = None,
     delay: float = 0,
     duration: float = 0,
@@ -86,7 +86,7 @@ def make_trapezoid(
         raise ValueError("Must supply flat time, if fall time is supplied.")
 
     if flat_time != -1:
-        if amplitude != 0:
+        if amplitude is not None:
             amplitude2 = amplitude
         elif (area is not None) and (rise_time > 0): # We have rise_time, flat_time and area.
             amplitude2 = area/(rise_time + flat_time)
