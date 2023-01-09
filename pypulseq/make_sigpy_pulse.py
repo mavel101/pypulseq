@@ -185,8 +185,10 @@ def make_slr(
     pulse_cfg: SigpyPulseOpts = SigpyPulseOpts(),
     disp: bool = False,
 ):
-    N = int(round(duration / 1e-6))
-    t = np.arange(1, N + 1) * system.rf_raster_time
+
+    design_raster = 10e-6 if duration<10e-3 else 20e-6
+    n_p = int(round(duration / design_raster))
+    t_p = np.arange(1, n_p + 1) * design_raster
 
     # Insert sigpy
     ptype = pulse_cfg.ptype
@@ -196,7 +198,7 @@ def make_slr(
     cancel_alpha_phs = pulse_cfg.cancel_alpha_phs
 
     pulse = rf.slr.dzrf(
-        n=N,
+        n=n_p,
         tb=time_bw_product,
         ptype=ptype,
         ftype=ftype,
@@ -204,6 +206,12 @@ def make_slr(
         d2=d2,
         cancel_alpha_phs=cancel_alpha_phs,
     )
+
+    # Interpolate to RF raster
+    N = int(round(duration / system.rf_raster_time))
+    t = np.arange(1, N + 1) * system.rf_raster_time
+    pulse = np.interp(t, t_p, pulse)
+
     flip = np.sum(pulse) * system.rf_raster_time * 2 * np.pi
     signal = pulse * flip_angle / flip
 
