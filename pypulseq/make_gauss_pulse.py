@@ -175,6 +175,8 @@ def make_gauss_pulse(
 
     if return_gz and return_delay:
         return rf, gz, gzr, delay
+    elif return_delay:
+        return rf, delay
     elif return_gz:
         return rf, gz, gzr
     else:
