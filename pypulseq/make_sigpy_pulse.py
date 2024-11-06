@@ -83,6 +83,8 @@ def sigpy_n_seq(
         Accompanying slice select trapezoidal gradient event. Returned only if `slice_thickness` is provided.
     gzr : SimpleNamespace, optional
         Accompanying slice select rephasing trapezoidal gradient event. Returned only if `slice_thickness` is provided.
+    delay : SimpleNamespace, optional
+        Delay event.
 
     Raises
     ------

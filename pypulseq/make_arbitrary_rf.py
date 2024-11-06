@@ -76,6 +76,8 @@ def make_arbitrary_rf(
         Radio-frequency pulse event with arbitrary pulse shape.
     gz : SimpleNamespace, optional
         Slice select trapezoidal gradient event accompanying the arbitrary radio-frequency pulse event.
+    delay : SimpleNamespace, optional
+        Delay event.
 
     Raises
     ------
