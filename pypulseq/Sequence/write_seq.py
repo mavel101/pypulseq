@@ -245,6 +245,19 @@ def write(self, file_name: Union[str, Path], create_signature, remove_duplicates
                 output_file.write(s)
             output_file.write("\n")
 
+        if len(self.ptx_library.data) != 0:
+            output_file.write('# Extension specification for pTx pulses:\n')
+            output_file.write('# id type flip delay duration  freq phase slice_ix no_rot\n')
+            output_file.write('# ..       deg   us     us      Hz   rad          \n')
+            output_file.write(f'extension PTX {self.get_extension_type_ID("PTX")}\n')
+            id_format_str = '{:.0f} {:.0f} {:.0f} {:.0f} {:.0f} {:g} {:g} {:.0f} {:.0f}\n'
+            for k in self.ptx_library.data:
+                lib_data1 = np.round(self.ptx_library.data[k][:4] * [1, 1, 1e6, 1e6])
+                lib_data2 = self.ptx_library.data[k][4:]
+                s = id_format_str.format(k, *lib_data1, *lib_data2)
+                output_file.write(s)
+            output_file.write('\n')
+        
         if len(self.shape_library.data) != 0:
             output_file.write("# Sequence Shapes\n")
             output_file.write("[SHAPES]\n\n")

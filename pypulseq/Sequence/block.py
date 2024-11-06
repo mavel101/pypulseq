@@ -146,6 +146,16 @@ def set_block(self, block_index: int, *args: SimpleNamespace) -> None:
                     "ref": label_id,
                 }
                 extensions.append(ext)
+            elif event.type == 'ptx':
+                
+                if hasattr(event, "id"):
+                    ptx_id = event.id
+                else:
+                    ptx_id = register_ptx_event(self, event)
+                
+                ext = {'type': self.get_extension_type_ID('PTX'), 'ref': ptx_id}
+                extensions.append(ext)
+                duration = max(duration, event.delay + event.duration)
         else:
             # Floating point number given as delay
             duration = max(duration, event)
@@ -400,6 +410,18 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                     block.label[len(block.label)] = label
                 else:
                     block.label = {0: label}
+            elif ext_type == 'PTX':
+                data = self.ptx_library.data[ext_data[1]]
+                pulse = SimpleNamespace()
+                pulse.type = 'ptx'
+                pulse.rf_type = data[0]
+                pulse.flip_angle = data[1]
+                pulse.delay = data[2]
+                pulse.duration = data[3]
+                pulse.freq_offset = data[4]
+                pulse.phase_offset = data[5]
+                pulse.slice_ix = data[6]
+                block.ptx = pulse
             else:
                 raise RuntimeError(f"Unknown extension ID {ext_data[0]}")
 
@@ -669,3 +691,34 @@ def register_rf_event(self, event: SimpleNamespace) -> Tuple[int, List[int]]:
     
 
     return rf_id, shape_IDs
+
+def register_ptx_event(self, event: EventLibrary) -> int:
+    """
+
+    Parameters
+    ----------
+    event : SimpleNamespace
+        ADC event to be registered.
+
+    Returns
+    -------
+    int
+        ID of registered ADC event.
+    """
+    data = (
+            event.rf_type,
+            event.flip_angle,
+            event.delay,
+            event.duration,
+            event.freq_offset,
+            event.phase_offset,
+            event.slice_ix
+    )
+    ptx_id, found = self.ptx_library.find_or_insert(new_data=data)
+
+    # Clear block cache because PTX event was overwritten
+    # TODO: Could find only the blocks that are affected by the changes
+    if self.use_block_cache and found:
+        self.block_cache.clear()
+
+    return ptx_id

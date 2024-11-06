@@ -51,6 +51,7 @@ def read(self, path: str, detect_rf_use: bool = False, remove_duplicates: bool =
     self.rf_library = EventLibrary()
     self.shape_library = EventLibrary()
     self.trigger_library = EventLibrary()
+    self.ptx_library = EventLibrary()
 
     # Raster times
     self.grad_raster_time = self.system.grad_raster_time
@@ -203,6 +204,10 @@ def read(self, path: str, detect_rf_use: bool = False, remove_duplicates: bool =
                 l1 = lambda s: int(s)
                 l2 = lambda s: get_supported_labels().index(s) + 1
                 self.label_inc_library = __read_and_parse_events(input_file, l1, l2)
+            elif section[:13] == 'extension PTX':
+                extension_id = int(section[13:])
+                self.set_extension_string_ID('PTX', extension_id)
+                self.ptx_library = __read_events(input_file, (1, 1, 1e-6, 1e-6, 1, 1, 1, 1), event_library=self.ptx_library)
             else:
                 raise ValueError(f"Unknown section code: {section}")
 
