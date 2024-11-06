@@ -16,7 +16,8 @@ except ModuleNotFoundError:
 from pypulseq.make_trapezoid import make_trapezoid
 from pypulseq.opts import Opts
 from pypulseq.sigpy_pulse_opts import SigpyPulseOpts
-
+from pypulseq.make_delay import make_delay
+from pypulseq.calc_duration import calc_duration
 
 def sigpy_n_seq(
     flip_angle: float,
@@ -27,7 +28,8 @@ def sigpy_n_seq(
     max_grad: float = 0,
     max_slew: float = 0,
     phase_offset: float = 0,
-    return_gz: bool = True,
+    return_gz: bool = False,
+    return_delay: bool = False,
     slice_thickness: float = 0,
     system: Opts = None,
     time_bw_product: float = 4,
@@ -81,6 +83,8 @@ def sigpy_n_seq(
         Accompanying slice select trapezoidal gradient event. Returned only if `slice_thickness` is provided.
     gzr : SimpleNamespace, optional
         Accompanying slice select rephasing trapezoidal gradient event. Returned only if `slice_thickness` is provided.
+    delay : SimpleNamespace, optional
+        Delay event.
 
     Raises
     ------
@@ -160,17 +164,19 @@ def sigpy_n_seq(
         if rfp.delay < (gz.rise_time + gz.delay):
             rfp.delay = gz.rise_time + gz.delay
 
-    if rfp.ringdown_time > 0:
-        t_fill = np.arange(1, round(rfp.ringdown_time / 1e-6) + 1) * 1e-6
-        rfp.t = np.concatenate((rfp.t, rfp.t[-1] + t_fill))
-        rfp.signal = np.concatenate((rfp.signal, np.zeros(len(t_fill))))
+    if rfp.ringdown_time > 0 and return_delay:
+        delay = make_delay(calc_duration(rfp) + rfp.ringdown_time)
 
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rfp.signal == -0.0)
     rfp.signal[negative_zero_indices] = 0
 
-    if return_gz:
-        return rfp, gz, gzr, pulse
+    if return_gz and return_delay:
+        return rfp, gz, gzr, delay
+    elif return_delay:
+        return rfp, delay
+    elif return_gz:
+        return rfp, gz, gzr
     else:
         return rfp
 
