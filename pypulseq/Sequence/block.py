@@ -386,6 +386,7 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                 pulse.freq_offset = data[4]
                 pulse.phase_offset = data[5]
                 pulse.slice_ix = data[6]
+                pulse.no_rot = data[7]
                 block.ptx = pulse
             else:
                 raise RuntimeError(f'Unknown extension ID {ext_data[0]}')
