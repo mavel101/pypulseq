@@ -421,6 +421,7 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                 pulse.freq_offset = data[4]
                 pulse.phase_offset = data[5]
                 pulse.slice_ix = data[6]
+                pulse.no_rot = data[7]
                 block.ptx = pulse
             else:
                 raise RuntimeError(f"Unknown extension ID {ext_data[0]}")
@@ -712,7 +713,8 @@ def register_ptx_event(self, event: EventLibrary) -> int:
             event.duration,
             event.freq_offset,
             event.phase_offset,
-            event.slice_ix
+            event.slice_ix,
+            event.no_rot
     )
     ptx_id, found = self.ptx_library.find_or_insert(new_data=data)
 

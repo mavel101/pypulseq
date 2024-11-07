@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from pypulseq.opts import Opts
 
 
-def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0, freq_offset: float = 0, phase_offset: float = 0, slice_ix: int = 0) -> SimpleNamespace:
+def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0, freq_offset: float = 0, phase_offset: float = 0, slice_ix: int = 0, no_rot: bool = False) -> SimpleNamespace:
     """
     Creates a pTx dummy pulse for the pTx extension.
 
@@ -24,6 +24,8 @@ def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, du
         Slice index for slice-selective pTx pulses
         This is needed for correct slice positioning/frequency offset calculation.
         Important: Slice thickness & number of slices have to be provided in the definitions section.
+    no_rot: bool, default= False
+        do not rotate gradients of this pTx pulse
     system : Opts, optional, default=Opts()
         System limits.
 
@@ -51,5 +53,6 @@ def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, du
     pulse.freq_offset = freq_offset
     pulse.phase_offset = phase_offset
     pulse.slice_ix = slice_ix
+    pulse.no_rot = int(no_rot)
 
     return pulse
