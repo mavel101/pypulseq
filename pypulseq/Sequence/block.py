@@ -155,7 +155,7 @@ def set_block(self, block_index: int, *args: SimpleNamespace) -> None:
                 
                 ext = {'type': self.get_extension_type_ID('PTX'), 'ref': ptx_id}
                 extensions.append(ext)
-                duration = max(duration, event.delay + event.duration)
+                duration = max(duration, event.delay + event.duration + event.ringdown_time)
         else:
             # Floating point number given as delay
             duration = max(duration, event)
@@ -422,6 +422,7 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                 pulse.phase_offset = data[5]
                 pulse.slice_ix = data[6]
                 pulse.no_rot = data[7]
+                pulse.ringdown_time = data[8]
                 block.ptx = pulse
             else:
                 raise RuntimeError(f"Unknown extension ID {ext_data[0]}")
@@ -714,7 +715,8 @@ def register_ptx_event(self, event: EventLibrary) -> int:
             event.freq_offset,
             event.phase_offset,
             event.slice_ix,
-            event.no_rot
+            event.no_rot,
+            event.ringdown_time
     )
     ptx_id, found = self.ptx_library.find_or_insert(new_data=data)
 

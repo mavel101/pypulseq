@@ -3,7 +3,15 @@ from types import SimpleNamespace
 from pypulseq.opts import Opts
 
 
-def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, duration: float = 0, freq_offset: float = 0, phase_offset: float = 0, slice_ix: int = 0, no_rot: bool = False) -> SimpleNamespace:
+def make_ptx_pulse(flip_angle: float, 
+                   rf_type: str = 'exc', 
+                   delay: float = 0, 
+                   duration: float = 0, 
+                   freq_offset: float = 0, 
+                   phase_offset: float = 0, 
+                   slice_ix: int = 0, 
+                   no_rot: bool = False,
+                   system: Opts = None) -> SimpleNamespace:
     """
     Creates a pTx dummy pulse for the pTx extension.
 
@@ -42,6 +50,9 @@ def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, du
     if rf_type not in ['exc', 'ref']:
         raise ValueError(f"RF type {rf_type} is invalid. Must be one of 'exc' or 'ref'.")
 
+    if system == None:
+        system = Opts.default
+
     rf_types = {'exc': 1, 'ref': 2}
 
     pulse = SimpleNamespace()
@@ -54,5 +65,6 @@ def make_ptx_pulse(flip_angle: float, rf_type: str = 'exc', delay: float = 0, du
     pulse.phase_offset = phase_offset
     pulse.slice_ix = slice_ix
     pulse.no_rot = int(no_rot)
+    pulse.ringdown_time = system.rf_ringdown_time
 
     return pulse
