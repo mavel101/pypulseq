@@ -47,13 +47,17 @@ def make_ptx_pulse(flip_angle: float,
     ValueError
         If `channel` is invalid. Must be one of 'osc0','osc1', or 'ext1'.
     """
-    if rf_type not in ['exc', 'ref']:
-        raise ValueError(f"RF type {rf_type} is invalid. Must be one of 'exc' or 'ref'.")
+    if rf_type not in ['exc', 'ref', 'sat']:
+        raise ValueError(f"RF type {rf_type} is invalid. Must be one of 'exc', 'ref' or 'sat'.")
 
     if system == None:
         system = Opts.default
 
-    rf_types = {'exc': 1, 'ref': 2}
+    rf_types = {'exc': 1, 'ref': 2, 'sat': 3}
+
+    if rf_type == 'sat' and slice_ix != 0:
+        slice_ix = 0
+        print('Warning: Only nonselective saturation pulse allowed. Setting slice index to 0.')
 
     pulse = SimpleNamespace()
     pulse.type = 'ptx'
@@ -66,5 +70,9 @@ def make_ptx_pulse(flip_angle: float,
     pulse.slice_ix = slice_ix
     pulse.no_rot = int(no_rot)
     pulse.ringdown_time = system.rf_ringdown_time
+    pulse.dead_time = system.rf_dead_time
+
+    if pulse.dead_time > pulse.delay:
+        pulse.delay = pulse.dead_time
 
     return pulse
