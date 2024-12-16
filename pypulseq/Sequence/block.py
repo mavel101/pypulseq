@@ -33,7 +33,7 @@ def add_block(self, block_index: int, *args: SimpleNamespace) -> None:
     """
     events = block_to_events(args)
     block_duration = calc_duration(*events)
-    self.dict_block_events[block_index] = np.zeros(7, dtype=np.int)
+    self.dict_block_events[block_index] = np.zeros(7, dtype=int)
     duration = 0
 
     check_g = {}  # Key-value mapping of index and  pairs of gradients/times
@@ -242,7 +242,7 @@ def add_block(self, block_index: int, *args: SimpleNamespace) -> None:
                 grad_to_check.stop[0] - block_duration) > 1e-7:
             raise RuntimeError("A gradient that doesn't end at zero needs to be aligned to the block boundary.")
 
-    eps = np.finfo(np.float).eps
+    eps = np.finfo(float).eps
     assert abs(duration - block_duration) < eps
     self.arr_block_durations.append(block_duration)
 

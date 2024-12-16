@@ -155,7 +155,7 @@ def read(self, path: str, detect_rf_use: bool = False) -> None:
                 grad.lsat = waveform_odd_rest[-1]
                 grad_prev_last[j] = grad.last
 
-                eps = np.finfo(np.float).eps
+                eps = np.finfo(float).eps
                 if grad.delay + len(grad.waveform) * self.grad_raster_time + eps < block_duration:
                     grad_prev_last[j] = 0
 
@@ -314,7 +314,7 @@ def __read_and_parse_events(input_file, *args) -> EventLibrary:
     while line != '' and line != '#':
         datas = re.split('(\s+)', line)
         datas = [d for d in datas if d != ' ']
-        data = np.zeros(len(datas) - 1, dtype=np.int)
+        data = np.zeros(len(datas) - 1, dtype=int)
         event_id = int(datas[0])
         for i in range(1, len(datas)):
             if i > len(args):

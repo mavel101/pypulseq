@@ -160,7 +160,7 @@ class Sequence:
         gw = self.gradient_waveforms()
         i_excitation = np.round(t_excitation / self.grad_raster_time)
         i_refocusing = np.round(t_refocusing / self.grad_raster_time)
-        i_periods = np.sort([1, *(i_excitation + 1), *(i_refocusing + 1), gw.shape[1] + 1]).astype(np.int)
+        i_periods = np.sort([1, *(i_excitation + 1), *(i_refocusing + 1), gw.shape[1] + 1]).astype(int)
         # i_periods -= 1  # Python is 0-indexed
         ii_next_excitation = min(len(i_excitation), 1)
         ii_next_refocusing = min(len(i_refocusing), 1)

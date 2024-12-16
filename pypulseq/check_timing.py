@@ -56,7 +56,7 @@ def check_timing(system: Opts, *events: SimpleNamespace) -> Tuple[bool, str, flo
             raster = system.grad_raster_time
 
         if hasattr(e, 'delay'):
-            eps = np.finfo(np.float).eps
+            eps = np.finfo(float).eps
             if e.delay < -eps:
                 ok = False
             if not __div_check(e.delay, raster):
