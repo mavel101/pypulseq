@@ -68,6 +68,6 @@ def compress_shape(
     if force_compression or compressed_shape.num_samples > len(v):
         compressed_shape.data = v
     else:
-        compressed_shape.data = decompressed_shape
+        compressed_shape.data = np.round(decompressed_shape / quant_factor) * quant_factor
 
     return compressed_shape
