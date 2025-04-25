@@ -64,7 +64,7 @@ def make_ptx_pulse(flip_angle: float,
     pulse.rf_type = rf_types[rf_type]
     pulse.flip_angle = flip_angle
     pulse.delay = delay
-    pulse.duration = duration
+    pulse.shape_dur = duration
     pulse.freq_offset = freq_offset
     pulse.phase_offset = phase_offset
     pulse.slice_ix = slice_ix

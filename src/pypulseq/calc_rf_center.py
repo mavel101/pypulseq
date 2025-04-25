@@ -24,7 +24,7 @@ def calc_rf_center(rf: SimpleNamespace) -> Tuple[float, float]:
     """
 
     if rf.type == 'ptx':
-        return rf.duration / 2, None
+        return rf.shape_dur / 2, None
 
     # Detect the excitation peak; if i is a plateau take its center
     rf_max = np.max(np.abs(rf.signal))

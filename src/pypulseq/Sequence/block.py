@@ -159,7 +159,7 @@ def set_block(self, block_index: int, *args: SimpleNamespace) -> None:
                 
                 ext = {'type': self.get_extension_type_ID('PTX'), 'ref': ptx_id}
                 extensions.append(ext)
-                duration = max(duration, event.delay + event.duration + event.ringdown_time)
+                duration = max(duration, event.delay + event.shape_dur + event.ringdown_time)
         else:
             # Floating point number given as delay
             duration = max(duration, event)
@@ -443,7 +443,7 @@ def get_block(self, block_index: int) -> SimpleNamespace:
                 pulse.rf_type = data[0]
                 pulse.flip_angle = data[1]
                 pulse.delay = data[2]
-                pulse.duration = data[3]
+                pulse.shape_dur = data[3]
                 pulse.freq_offset = data[4]
                 pulse.phase_offset = data[5]
                 pulse.slice_ix = data[6]
@@ -729,7 +729,7 @@ def register_ptx_event(self, event: EventLibrary) -> int:
             event.rf_type,
             event.flip_angle,
             event.delay,
-            event.duration,
+            event.shape_dur,
             event.freq_offset,
             event.phase_offset,
             event.slice_ix,
