@@ -45,16 +45,14 @@ def sigpy_n_seq(
     ----------
     flip_angle : float
         Flip angle in radians.
-    apodization : float, optional, default=0
-        Apodization.
-    center_pos : float, optional, default=0.5
-        Position of peak.5 (midway).
     delay : float, optional, default=0
         Delay in seconds (s).
     duration : float, optional, default=4e-3
         Duration in seconds (s).
     freq_offset : float, optional, default=0
         Frequency offset in Hertz (Hz).
+    center_pos : float, optional, default=0.5
+        Position of peak.5 (midway).
     max_grad : float, optional, default=0
         Maximum gradient strength of accompanying slice select trapezoidal event.
     max_slew : float, optional, default=0
@@ -70,6 +68,26 @@ def sigpy_n_seq(
         System limits. Default is a system limits object initialized to default values.
     time_bw_product : float, optional, default=4
         Time-bandwidth product.
+    pulse_cfg: SigpyPulseOpts, optional, default=None
+        Pulse configuration options. Possible keys are:
+        - pulse_type: str, optional, default='slr'
+            Pulse type. Must be one of 'slr' or 'sms'.
+        - ptype: str, optional, default='st'
+            Pulse design method. Must be one of 'st', 'ex', 'inv', 'sat', 'se', 'fi', 'fs', 'se'.
+        - ftype: str, optional, default='ls'
+            Filter type. Must be one of 'ls', 'pm', 'min', 'max', 'ap'.
+        - d1: float, optional, default=0.01
+            Passband ripple.
+        - d2: float, optional, default=0.01
+            Stopband ripple.
+        - cancel_alpha_phs: bool, optional, default=False
+            Cancel alpha phase.
+        - n_bands: int, optional, default=3
+            Number of bands. SMS only.
+        - band_sep: float, optional, default=20
+            Band separation. SMS only.
+        - phs_0_pt: str, optional, default='None'
+            Phase 0 point. SMS only.
     use : str, optional, default=str()
         Use of radio-frequency sinc pulse. Must be one of 'excitation', 'refocusing' or 'inversion'.
     plot: bool, optional, default=True
@@ -137,7 +155,7 @@ def sigpy_n_seq(
 
     if rfp.dead_time > rfp.delay:
         warn(
-            f'Specified RF delay {rfp.delay*1e6:.2f} us is less than the dead time {rfp.dead_time*1e6:.0f} us. Delay was increased to the dead time.',
+            f'Specified RF delay {rfp.delay * 1e6:.2f} us is less than the dead time {rfp.dead_time * 1e6:.0f} us. Delay was increased to the dead time.',
             stacklevel=2,
         )
         rfp.delay = rfp.dead_time
@@ -169,11 +187,6 @@ def sigpy_n_seq(
         if rfp.delay < (gz.rise_time + gz.delay):
             rfp.delay = gz.rise_time + gz.delay
 
-    if rfp.ringdown_time > 0:
-        t_fill = np.arange(1, round(rfp.ringdown_time / 1e-6) + 1) * 1e-6
-        rfp.t = np.concatenate((rfp.t, rfp.t[-1] + t_fill))
-        rfp.signal = np.concatenate((rfp.signal, np.zeros(len(t_fill))))
-
     # Following 2 lines of code are workarounds for numpy returning 3.14... for np.angle(-0.00...)
     negative_zero_indices = np.where(rfp.signal == -0.0)
     rfp.signal[negative_zero_indices] = 0
@@ -201,7 +214,7 @@ def make_slr(
     if pulse_cfg is None:
         pulse_cfg = SigpyPulseOpts()
 
-    n_samples = int(round(duration / 1e-6))
+    n_samples = round(duration / 1e-6)
     t = np.arange(1, n_samples + 1) * system.rf_raster_time
 
     # Insert sigpy
@@ -253,7 +266,7 @@ def make_sms(
     if pulse_cfg is None:
         pulse_cfg = SigpyPulseOpts()
 
-    n_samples = int(round(duration / 1e-6))
+    n_samples = round(duration / 1e-6)
     t = np.arange(1, n_samples + 1) * system.rf_raster_time
 
     # Insert sigpy
