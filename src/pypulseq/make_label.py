@@ -26,7 +26,8 @@ def make_label(label: str, type: str, value: Union[bool, float, int]) -> SimpleN
             - 'NAV' (flag): navigator data flag.
             - 'REV' (flag): flag indicating that the readout direction is reversed.
             - 'SMS' (flag): simultaneous multi-slice (SMS) acquisition.
-            _ 'REF' (flag): parallel imaging flag indicating reference / auto-calibration data.
+            - 'REF' (flag): parallel imaging flag indicating reference / auto-calibration data.
+            - 'OFF' (flag): Offline flag that labels the data, that should not be used for the online-reconstruction (on Siemens it negates the ONLINE MDH flag).
             - 'IMA' (flag): parallel imaging flag indicating imaging data within the ACS region.
             - 'NOISE' (flag): noise adjust scan, for iPAT acceleration.
             - 'PMC' (flag): for MoCo/PMC Pulseq version to recognize blocks that can be prospectively corrected for motion.
